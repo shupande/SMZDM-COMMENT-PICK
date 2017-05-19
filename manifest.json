@@ -1,0 +1,22 @@
+{
+  "manifest_version": 2,
+  "name": "值评论",
+  "description": "本插件用来监控“什么值得买精选频道”70%以上值的商品以及评论中用户推荐的商品。",
+  "version": "1.0",
+  "icons":{
+     "48":"icon48.png",
+     "128":"icon128.png"
+  },
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html",
+    "default_title": "值评论"
+  },
+  "background": {
+      "page": "more.html"
+   },
+  "permissions": [ "http://*/*", "https://*/*", "notifications", "tabs", "contextMenus", "history", "storage"],
+  "content_security_policy": "img-src *; object-src 'self'; script-src 'self'",
+  "options_page":"more.html",
+  "web_accessible_resources": [ "*" ]
+}
