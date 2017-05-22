@@ -1,6 +1,8 @@
-var article_picked=new Array();
-checkStatus();
 
+checkStatus();
+var article_picked_comments,
+			  comment_count,
+					temp_id;
 
 //ajax 
 function httpRequest(url, callback) { 
@@ -23,7 +25,9 @@ function httpRequest(url, callback) {
 function checkStatus(){
 	var current=Math.round(new Date().getTime()/10);
 	console.log(current);
-	
+	//初始化
+	article_picked_comments=new Array();
+	temp_id=[];
 
     httpRequest('https://api.smzdm.com/v1/util/editors_recommend?channel_id=18&smzdm_id=0&page=1&limit=20&time_sort=',function(data){
 		//解析JSON
@@ -57,7 +61,7 @@ function checkStatus(){
 			}
 		}
 		//每10分钟刷新一遍
-        setTimeout(checkStatus, 100000);
+        setTimeout(checkStatus, 1000000);
     });
 }
 
@@ -68,7 +72,8 @@ function getComment(url,article_pic,article_title,article_url,article_price,arti
 		result=JSON.parse(result);
 		var resultList=result.data.rows;
 		//筛选关键字
-		var defineKeyWord=JSON.parse(localStorage.keyword) || "快";
+		var defineKeyWord=JSON.parse(localStorage.keyword) || "{快}";
+		comment_count=0;//重置
 
 		console.log("↓↓↓↓↓↓↓↓↓一个商品的评论开始↓↓↓↓↓↓↓↓↓");
 		//筛选评论
@@ -80,16 +85,47 @@ function getComment(url,article_pic,article_title,article_url,article_price,arti
 				//排除快递字样
 					if(((resultList[k].comment_content.indexOf("快递")>0) || (resultList[k].comment_content.indexOf("营养快线")>0)) ==false){
 						
+					
+						temp_id.push(article_id);
+						//符合条件的评论计数
+						for(var l in temp_id){
+							if(article_id==temp_id[l]){
+								comment_count++;
+							}
+						}
+
+						//分别存储多条符合的评论和仅一条符合的评论
+						if(comment_count>1){
+								
+
+
+						}else if(comment_count==1){
+							console.log("==========222222222222=============");
+
+						}
+
 						setNotification(article_pic,article_title,article_url,resultList[k].comment_content,article_price,article_id);
 
 
-						console.log("符合条件:》》》》》》===="+resultList[k].comment_content);
-						console.log(article_url);
+
+						// console.log("符合条件:》》》》》》===="+resultList[k].comment_content);
+						// console.log(article_url);
 					}
+
+					//多条评论组合
+					if(article_id==temp_id){
+							article_picked_comments.push({article_id:article_id,comment_content:resultList[k].comment_content});
+					}else{
+
+					}
+
+					localStorage.article_picked_comments=JSON.stringify(article_picked_comments);
+
+
 				}
 			}
 		}
-
+		console.log(comment_count);
 		
 	});	
 
@@ -98,8 +134,6 @@ function getComment(url,article_pic,article_title,article_url,article_price,arti
 
 //浏览器通知
 function setNotification(article_pic,article_title,article_url,comment_content,article_price,article_id){
-	
-	article_picked.push({article_pic:article_pic,article_title:article_title,article_url:article_url,article_price:article_price,comment_content:comment_content});
 	
 	//查询设置通知权限
 	// Notification.requestPermission().then(function(permission) { 
@@ -110,7 +144,7 @@ function setNotification(article_pic,article_title,article_url,comment_content,a
 	    Notification.permission = status;
 	  }
 	});
-	var tag='';
+	// var tag='';
 
 	//chrome rich notifications
     var opt = {
@@ -118,7 +152,7 @@ function setNotification(article_pic,article_title,article_url,comment_content,a
 		  title: article_title,
 		  message: comment_content,
 		  iconUrl: article_pic,
-		  requireInteraction: true, //通知保持常驻，用户点击才消失
+		  // requireInteraction: true, //通知保持常驻，用户点击才消失
 		  buttons: [{
 	    	title: "(づ｡◕‿‿◕｡)づ报告！找到一个符合您的要求>>>",
 			iconUrl: chrome.runtime.getURL("go.png"),
@@ -131,22 +165,22 @@ function setNotification(article_pic,article_title,article_url,comment_content,a
 		          { title: "Item3", message: ""}]
 		}
 
-     chrome.notifications.create(article_id, opt, function (article_id) {
-     	tag=article_id;
+     chrome.notifications.create(article_id,opt,function (article_id) {
+     	// console.log(article_id);
      });
 
 
      //点击主体
      chrome.notifications.onClicked.addListener(function(article_id) {
      							// window.open(article_url);
-								tag == article_id && chrome.tabs.create({url:article_url}, function(){});
+								chrome.tabs.create({url:article_url}, function(){});
 							});
      //点击按钮
      chrome.notifications.onButtonClicked.addListener(function(article_id,buttonIndex){
      							if(buttonIndex==0){
-     								tag == article_id && chrome.tabs.create({url:article_url}, function(){});
+     								 chrome.tabs.create({url:article_url}, function(){});
      							}else{
-     								tag == article_id && chrome.tabs.create({url:"more.html"}, function(){});
+     								 chrome.tabs.create({url:"more.html"}, function(){});
      							}
 							});
 
@@ -189,5 +223,24 @@ function setNotification(article_pic,article_title,article_url,comment_content,a
  //    }
 }
 
-localStorage.article_picked=JSON.stringify(article_picked);
 
+//
+
+
+
+//去重复
+function id_unique(arr) {
+        var newArr = [],
+        		   i=0;
+        for(; i < arr.length; i++) {
+            var a = arr[i];
+            console.log(a);
+            if(newArr.indexOf(a) !== -1) {  
+                continue;
+            }else {
+                newArr[newArr.length] = a;    
+            } 
+        }
+         console.log(newArr)
+     // return newArr;                    
+}
