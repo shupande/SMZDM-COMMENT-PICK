@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "值评论",
-  "description": "本插件用来监控“什么值得买精选频道”70%以上值的商品以及评论中用户推荐的商品。",
+  "description": "本插件用来监控“什么值得买精选频道”中商品的用户评论。",
   "version": "1.0",
   "icons":{
      "48":"icon48.png",

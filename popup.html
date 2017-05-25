@@ -1,92 +1,118 @@
 <html>
-  <head>
-  	<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
     <style>
-    *{
-    	margin:0;
-    	padding: 3px;
+    * {
+        margin: 0;
+        padding: 3px;
     }
-    p{
-    	color: #C4C4C4;
+    
+    p {
+        color: #C4C4C4;
     }
-    p a{
-    	color: #C4C4C4;
-		text-decoration:none;
+    
+    p a {
+        color: #C4C4C4;
+        text-decoration: none;
     }
-	  body {
-	    font-family: "微软雅黑", "Lucida Grande", Tahoma, sans-serif;
-	    width: 250px;
-	    height: 120px;
-	  }
-	  label{
-	  	font-size: 10px;
-	  	color: #6E6E6E;
-	  }
-	  input{
-	  	margin-top: 5px;
-	  	font-size: 5px;
-	  	width: 180px;
-	  	height: 28px;
-	  	border: 1px solid #DBDBDB;
-	  	border-radius:4px;
-	  }
-	  input::-webkit-input-placeholder{
-	  	color: #C4C4C4;
-	  	font-size: 2px;
-	  }
-	  button{
-	  	background: #449d44;
-	  	color: white;
-	  	border: 1px solid #eee;
-	  	border-radius:5px;
-	  	padding: 6 12 6 12px;
-	  	margin-top: 5px;
-	  }
-	  #status{
-	  	text-align: center;
-	  }
-	  #more{
-	  	text-align: right;
-	  }
-	  #more a{
-	  	font-size: 10px;
-	  	color: #C4C4C4;
-	  }
-	  #tips{
-	  	color: red;
-	  	font-size: 10px;
-	  }
+    
+    body {
+        font-family: "微软雅黑", "Lucida Grande", Tahoma, sans-serif;
+        width: 250px;
+        height: 120px;
+    }
+    
+    label {
+        font-size: 10px;
+        color: #6E6E6E;
+    }
+    
+    input {
+        margin-top: 5px;
+        font-size: 5px;
+        width: 180px;
+        height: 28px;
+        border: 1px solid #DBDBDB;
+        border-radius: 4px;
+    }
+    
+    input::-webkit-input-placeholder {
+        color: #C4C4C4;
+        font-size: 2px;
+    }
+    
+    button {
+        background: #449d44;
+        color: white;
+        border: 1px solid #eee;
+        border-radius: 5px;
+        padding: 6 12 6 12px;
+        margin-top: 5px;
+    }
+    
+    #clearKeyWordButton {
+        background: red;
+        color: white;
+        border: 1px solid #eee;
+        border-radius: 5px;
+        padding: 6 12 6 12px;
+        margin-top: 5px
+    }
+    
+    #status {
+        text-align: center;
+    }
+    
+    #more {
+        text-align: right;
+    }
+    
+    #more a {
+        font-size: 10px;
+        color: #C4C4C4;
+    }
+    
+    #tips {
+        color: red;
+        font-size: 10px;
+    }
     </style>
-  </head>
-  <body>
-  	<p id="more"><a href="more.html" target="_blank">历史优惠</a></p>
+</head>
+
+<body>
+    <p id="more"><a href="more.html" target="_blank">历史优惠</a></p>
     <div id="status">
-    	<img src="icon48.png" alt="">
-    	<p>by <a href="https://weibo.com/unimz" target="_blank">@舒盼unimz</a></p>
-		<div class="input-group">
-		  <label for="form-group">下方输入需要实时监控的商品和评论关键字，默认为包含“快”的评论。</label>
-		  <div><span id="tips"></span></div>
-		  <div>
-	      <span>值比例:</span>
-	      <input type="text" class="form-control" id="worthyValueInput" placeholder="输入整数：如：75、80">
-	      </div>
-		  <div>
-		  <span>关键字:</span>
-	      <input type="text" class="form-control" id="keyWordInput" placeholder="共可设置4个筛选关键字">
-	      <span>关键字:</span>
-	      <input type="text" class="form-control" id="keyWordInput2" placeholder="一行一个">
-	      <span>关键字:</span>
-	      <input type="text" class="form-control" id="keyWordInput3" placeholder="如：快、BUG价、很划算">
-	      <span>关键字:</span>
-	      <input type="text" class="form-control" id="keyWordInput4" placeholder="也可留空">
-	      </div>
-	      <span class="input-group-btn">
-	        <button class="btn btn-default" id="setKeyWordButton" type="button">保存</button>
+        <img src="icon48.png" alt="">
+        <p>by <a href="https://weibo.com/unimz" target="_blank">@舒盼unimz</a></p>
+        <div class="input-group">
+            <label for="form-group">下方输入需要实时监控的商品和评论关键字，默认为包含“快”的评论。</label>
+            <div><span id="tips"></span></div>
+            <div>
+                <span>值比例:</span>
+                <input type="number" class="form-control" id="worthyValueInput" placeholder="输入整数：如：75、80">
+                <span class="input-group-btn">
+	        <button class="btn btn-default" id="setworthyValue" type="button">设置</button>
 	      </span>
-	    </div>
+            </div>
+            <div>
+                <span>关键字:</span>
+                <input type="text" class="form-control" id="keyWordInput" placeholder="共可设置4个筛选关键字">
+                <span>关键字:</span>
+                <input type="text" class="form-control" id="keyWordInput2" placeholder="一行一个">
+                <span>关键字:</span>
+                <input type="text" class="form-control" id="keyWordInput3" placeholder="如：快、BUG价、很划算">
+                <span>关键字:</span>
+                <input type="text" class="form-control" id="keyWordInput4" placeholder="也可留空">
+            </div>
+            <span class="input-group-btn">
+	      	<button class="btn btn-default" id="clearKeyWordButton" type="button">恢复默认</button>
+	        <button class="btn btn-default" id="setKeyWordButton" type="button">设置</button>
+	      </span>
+        </div>
     </div>
     <img id="image-result" hidden>
     <script src="popup.js"></script>
-  </body>
-</html>
+</body>
 
+</html>
