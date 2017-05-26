@@ -81,30 +81,24 @@ function getComment(url,article_pic,article_title,article_url,article_price,arti
 			console.log(resultList[k].comment_content);
 
 			for(var j in defineKeyWord ){
+
+				//评论关键字筛选
 				if(resultList[k].comment_content.indexOf(defineKeyWord[j])>0){
 				//排除快递字样
 					if(((resultList[k].comment_content.indexOf("快递")>0) || (resultList[k].comment_content.indexOf("营养快线")>0)) ==false){
 						
 					
 						temp_id.push(article_id);
-						//符合条件的评论计数
+
 						for(var l in temp_id){
 							if(article_id==temp_id[l]){
 								comment_count++;
 							}
 						}
+						
+						article_picked_comments.push({article_id:article_id,comment_content:resultList[k].comment_content});
 
-						//分别存储多条符合的评论和仅一条符合的评论
-						if(comment_count>1){
-								
-
-
-						}else if(comment_count==1){
-							console.log("==========222222222222=============");
-
-						}
-
-						setNotification(article_pic,article_title,article_url,resultList[k].comment_content,article_price,article_id);
+						// setNotification(article_pic,article_title,article_url,resultList[k].comment_content,article_price,article_id);
 
 
 
@@ -112,19 +106,17 @@ function getComment(url,article_pic,article_title,article_url,article_price,arti
 						// console.log(article_url);
 					}
 
-					//多条评论组合
-					if(article_id==temp_id){
-							article_picked_comments.push({article_id:article_id,comment_content:resultList[k].comment_content});
-					}else{
-
-					}
-
-					localStorage.article_picked_comments=JSON.stringify(article_picked_comments);
-
-
 				}
+
+				//
+				
+
+				//多条评论组合
+	
 			}
 		}
+
+		localStorage.article_picked_comments=JSON.stringify(article_picked_comments);
 		console.log(comment_count);
 		
 	});	
@@ -135,6 +127,13 @@ function getComment(url,article_pic,article_title,article_url,article_price,arti
 //浏览器通知
 function setNotification(article_pic,article_title,article_url,comment_content,article_price,article_id){
 	
+	
+	var comments=JSON.parse(localStorage.article_picked_comments);
+
+	for(var i in comments){
+		console.log(comments[i].article_id);
+	}
+
 	//查询设置通知权限
 	// Notification.requestPermission().then(function(permission) { 
 
