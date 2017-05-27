@@ -4,7 +4,6 @@ var article_picked_comments,
 			  comment_count,
 					temp_id;
 
-chrome.notifications.onButtonClicked.removeListener(function (){});
 
 //ajax 
 function httpRequest(url, callback) { 
@@ -88,7 +87,6 @@ function getComment(url,article_pic,article_title,article_url,article_price,arti
 			// console.log(resultList[k].comment_content);
 
 			for(var j in defineKeyWord ){
-
 				//评论关键字筛选
 				if(resultList[k].comment_content.indexOf(defineKeyWord[j])>0){
 				//排除快递字样
@@ -137,6 +135,7 @@ function setNotification(){
 	var tempComments=comments;
 	var count=0,url,id;
 	var index=new Array();
+	var tag='';
 
 	for(var i=0;i<comments.length;i++){
 		//两个数组遍历对比并计数
@@ -179,7 +178,7 @@ function setNotification(){
 		url=comments[i].article_url;
 
 		chrome.notifications.create(id,opt,function (id) {
-		     	// console.log(article_id);
+		     	tag=id;
 		   	});
 
 		// chrome.notifications.onClicked.addListener(function(id) {
@@ -196,17 +195,23 @@ function setNotification(){
 		//      	// console.log(article_id);
 		//    	});
 		// },10000);
+
+		
+
 	}
 
 	chrome.notifications.onButtonClicked.addListener(function(id,buttonIndex){
 		if(buttonIndex==0){
+			 console.log(id);
 			 chrome.tabs.create({url:"http://www.smzdm.com/p/"+id}, function(){});
 		}else{
 			 chrome.tabs.create({url:"more.html"}, function(){});
 		}
 	});
 
-
+	chrome.notifications.onClosed.addListener(function (id) {
+        chrome.notifications.onButtonClicked.removeListener(function(id){});
+    });
 	//点击主体
 	     
 	 //点击按钮
