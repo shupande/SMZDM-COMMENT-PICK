@@ -4,6 +4,8 @@ var article_picked_comments,
 			  comment_count,
 					temp_id;
 
+chrome.notifications.onButtonClicked.removeListener(function (){});
+
 //ajax 
 function httpRequest(url, callback) { 
 	var xhr = new XMLHttpRequest();
@@ -61,8 +63,15 @@ function checkStatus(){
 			}
 		}
 		//每10分钟刷新一遍
-        setTimeout(checkStatus, 1000000);
+        setTimeout(checkStatus, 100000);
     });
+    //通知
+    setNotification();
+   //  if(chrome.notifications.onButtonClicked.hasListener(function(){})){
+   //  	console.log("存在监听=============");
+   //  	//如果存在监听器就删除
+   //  	chrome.notifications.onButtonClicked.removeListener(function(){});
+  	// }  
 }
 
 
@@ -73,12 +82,10 @@ function getComment(url,article_pic,article_title,article_url,article_price,arti
 		var resultList=result.data.rows;
 		//筛选关键字
 		var defineKeyWord=JSON.parse(localStorage.keyword) || "{快}";
-		comment_count=0;//重置
 
-		console.log("↓↓↓↓↓↓↓↓↓一个商品的评论开始↓↓↓↓↓↓↓↓↓");
 		//筛选评论
 		for(var k in resultList){
-			console.log(resultList[k].comment_content);
+			// console.log(resultList[k].comment_content);
 
 			for(var j in defineKeyWord ){
 
@@ -88,22 +95,9 @@ function getComment(url,article_pic,article_title,article_url,article_price,arti
 					if(((resultList[k].comment_content.indexOf("快递")>0) || (resultList[k].comment_content.indexOf("营养快线")>0)) ==false){
 						
 					
-						temp_id.push(article_id);
+						console.log(resultList[k].comment_content);
+						article_picked_comments.push({article_id:article_id,article_pic:article_pic,article_url:article_url,article_price:article_price,article_title:article_title,comment_content:resultList[k].comment_content});
 
-						for(var l in temp_id){
-							if(article_id==temp_id[l]){
-								comment_count++;
-							}
-						}
-						
-						article_picked_comments.push({article_id:article_id,comment_content:resultList[k].comment_content});
-
-						// setNotification(article_pic,article_title,article_url,resultList[k].comment_content,article_price,article_id);
-
-
-
-						// console.log("符合条件:》》》》》》===="+resultList[k].comment_content);
-						// console.log(article_url);
 					}
 
 				}
@@ -117,71 +111,106 @@ function getComment(url,article_pic,article_title,article_url,article_price,arti
 		}
 
 		localStorage.article_picked_comments=JSON.stringify(article_picked_comments);
-		console.log(comment_count);
+		// console.log(comment_count);
 		
 	});	
 
 }
 
+//article_pic,article_title,article_url,comment_content,article_price,article_id
 
 //浏览器通知
-function setNotification(article_pic,article_title,article_url,comment_content,article_price,article_id){
-	
-	
-	var comments=JSON.parse(localStorage.article_picked_comments);
-
-	for(var i in comments){
-		console.log(comments[i].article_id);
-	}
+function setNotification(){
 
 	//查询设置通知权限
-	// Notification.requestPermission().then(function(permission) { 
+		// Notification.requestPermission().then(function(permission) { 
 
-	 // });
+		 // });
 	Notification.requestPermission(function(status){  //status值有三种：default/granted/denied
 	  if(Notification.permission !== status){
 	    Notification.permission = status;
 	  }
 	});
-	// var tag='';
+	
+	//读取评论
+	var comments=JSON.parse(localStorage.article_picked_comments);
+	var tempComments=comments;
+	var count=0,url,id;
+	var index=new Array();
 
-	//chrome rich notifications
-    var opt = {
-		  type: "list",	 //带按钮样式的通知
-		  title: article_title,
-		  message: comment_content,
-		  iconUrl: article_pic,
-		  // requireInteraction: true, //通知保持常驻，用户点击才消失
-		  buttons: [{
-	    	title: "(づ｡◕‿‿◕｡)づ报告！找到一个符合您的要求>>>",
-			iconUrl: chrome.runtime.getURL("go.png"),
-    	  },{
-	    	title: "点这里查看全部-值评论！",
-			iconUrl: chrome.runtime.getURL("icon.png"),
-    	  }],
-		  items: [{ title: "价格：", message: article_price},
-		          { title: "评论：", message: comment_content},
-		          { title: "Item3", message: ""}]
+	for(var i=0;i<comments.length;i++){
+		//两个数组遍历对比并计数
+		for(var j=0; j<tempComments.length;j++){
+			if(comments[i].article_id==tempComments[j].article_id && i!=j){
+				count++;
+				index.push(j);
+			}
 		}
 
-     chrome.notifications.create(article_id,opt,function (article_id) {
-     	// console.log(article_id);
-     });
+			//大于一条评论
+			var items=new Array();
+			items.push({title:"价格：",message:comments[i].article_price});
+			items.push({title:"评论：",message:comments[i].comment_content});
+			if(count>0){
+				for(n in index){
+					items.push({title:"评论：",message:comments[index[n]].comment_content});
+				}
+			}
+
+			var opt = {
+			  type: "list",	 //带按钮样式的通知
+			  title: comments[i].article_title,
+			  message: comments[i].comment_content,
+			  iconUrl: comments[i].article_pic,
+			  // requireInteraction: true, //通知保持常驻，用户点击才消失
+			  buttons: [{
+		    	title: "(づ｡◕‿‿◕｡)づ报告！找到一个符合您的要求>>>",
+				iconUrl: chrome.runtime.getURL("go.png"),
+	    	  },{
+		    	title: "点这里查看全部-值评论！",
+				iconUrl: chrome.runtime.getURL("icon.png"),
+	    	  }],
+			  items: items
+			}
+
+		index=[];
+		count=0;
+		id=comments[i].article_id;
+		url=comments[i].article_url;
+
+		chrome.notifications.create(id,opt,function (id) {
+		     	// console.log(article_id);
+		   	});
+
+		// chrome.notifications.onClicked.addListener(function(id) {
+	 //     							// window.open(article_url);
+		// 							chrome.tabs.create({url:"http://www.smzdm.com/p/"+id}, function(){});
+		// 						});
 
 
-     //点击主体
-     chrome.notifications.onClicked.addListener(function(article_id) {
-     							// window.open(article_url);
-								chrome.tabs.create({url:article_url}, function(){});
-							});
-     //点击按钮
-     chrome.notifications.onButtonClicked.addListener(function(article_id,buttonIndex){
-     							if(buttonIndex==0){
-     								 chrome.tabs.create({url:article_url}, function(){});
-     							}else{
-     								 chrome.tabs.create({url:"more.html"}, function(){});
-     							}
-							});
+
+
+		//
+		// setInterval(function(){
+		// 		chrome.notifications.create(id,opt,function () {
+		//      	// console.log(article_id);
+		//    	});
+		// },10000);
+	}
+
+	chrome.notifications.onButtonClicked.addListener(function(id,buttonIndex){
+		if(buttonIndex==0){
+			 chrome.tabs.create({url:"http://www.smzdm.com/p/"+id}, function(){});
+		}else{
+			 chrome.tabs.create({url:"more.html"}, function(){});
+		}
+	});
+
+
+	//点击主体
+	     
+	 //点击按钮
+	
 
 	// //通知的各项参数
 	// var options={
@@ -225,21 +254,3 @@ function setNotification(article_pic,article_title,article_url,comment_content,a
 
 //
 
-
-
-//去重复
-function id_unique(arr) {
-        var newArr = [],
-        		   i=0;
-        for(; i < arr.length; i++) {
-            var a = arr[i];
-            console.log(a);
-            if(newArr.indexOf(a) !== -1) {  
-                continue;
-            }else {
-                newArr[newArr.length] = a;    
-            } 
-        }
-         console.log(newArr)
-     // return newArr;                    
-}
