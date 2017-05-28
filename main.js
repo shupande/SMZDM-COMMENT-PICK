@@ -2,8 +2,7 @@
 checkStatus();
 var article_picked_comments,
 			  comment_count,
-					temp_id,
-					id;
+					     id;
 
 
 //ajax 
@@ -33,14 +32,13 @@ function checkStatus(){
 	// console.log(time_sort);
 	//初始化
 	article_picked_comments=new Array();
-	temp_id=[];
 
-	var page=[1];
-	for(n in page){
-		if(page[n]!=1){
-			time_sort=current.substring(0,5)+"000000";
-		}
-		ajaxUrl='https://api.smzdm.com/v1/util/editors_recommend?channel_id=18&smzdm_id=0&page='+page[n]+'&limit=20&time_sort='+time_sort;
+	// var page=[1];
+	// for(n in page){
+	// 	if(page[n]!=1){
+	// 		time_sort=current.substring(0,5)+"000000";
+	// 	}
+		ajaxUrl='https://api.smzdm.com/v1/util/editors_recommend?channel_id=18&smzdm_id=0&page='+1+'&limit=20&time_sort='+time_sort;
 		//依次查询
 		httpRequest(ajaxUrl,function(data){
 		//解析JSON
@@ -59,7 +57,7 @@ function checkStatus(){
 			if((worthy/(worthy+unworthy)*100)>defineWorthyValue && parseInt(list[i].article_comment) >2){
 				// console.log(localStorage.defineWorthyValue);
 
-				innerHtml +='<tr><td><img src="'+list[i].article_pic+'" class="main_img" alt="pic" ></td><td class="right_td" id="'+list[i].article_id+'"><h4 class="title">'+list[i].article_title+'</h4><p class="price">'+list[i].article_price+'<small class="date">'+list[i].article_date+'</small></p><p><a href="'+list[i].article_url+'" class="btn btn-success" role="button" target="_blank">查看</a></p></td><td><h1 class="worthy">'+parseInt(worthy/(worthy+unworthy)*100)+'% 值</h1></td></tr>';
+				innerHtml +='<tr class="list"><td><img src="'+list[i].article_pic+'" class="main_img" alt="pic" ></td><td class="right_td" id="'+list[i].article_id+'"><h4 class="title">'+list[i].article_title+'</h4><p class="price">'+list[i].article_price+'<small class="date">'+list[i].article_date+'</small></p><p><a href="'+list[i].article_url+'" class="btn btn-success" role="button" target="_blank">查看</a></p></td><td><h1 class="worthy">'+parseInt(worthy/(worthy+unworthy)*100)+'% 值</h1></td></tr>';
 				
 
 				var url="https://api.smzdm.com/v1/comments?article_id="+list[i].article_id+"&type=haitao&limit=50&offset=0&smiles=0&atta=0&ishot=1&f=android"
@@ -76,7 +74,7 @@ function checkStatus(){
 	        document.getElementById("innerContent").innerHTML=innerHtml;
 	    });
 	    
-	}
+	// }
 	
     //设置通知
     setNotification();

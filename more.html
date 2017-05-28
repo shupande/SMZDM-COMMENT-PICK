@@ -10,11 +10,8 @@
     		padding: 0px;
     		font-family: "微软雅黑";
     	}
-		#main_content{
-			padding: 20px;
-		}
-		.container{
-			background-color: white;
+		.navbar{
+			margin-bottom: 0px;
 		}
 		.container a{
 			font-weight: bold;
@@ -32,11 +29,11 @@
 		td.right_td{
 			padding: 30px;
 		}
-		tr{
-			border: 1px solid #DFDFDF;
-		}	
 		footer{
 			text-align: center;
+		}
+		.bg{
+			background-color: #e6e6e6;
 		}
 		.worthy{
 			color: #FF3900;
@@ -54,6 +51,15 @@
 			margin-left: 3px;
 			font-weight: bold;
 		}
+		.thumbnail{
+			margin: 20px;
+		}
+		.list{
+			margin-top:10px; 
+		}
+		footer{
+			margin-top: 20px;
+		}
     </style>
 </head>
 <body>
@@ -64,15 +70,15 @@
 	  </div>
 	</nav>
 	<div class="row" id="main_content">
-	  <div class="col-sm-12 col-md-12">
+	  <div class="col-sm-12 col-md-12 bg ">
 	    <div class="thumbnail">
 	      <div class="caption" >
-	      	<table frame=below id="innerContent">
+	      	<table id="innerContent">
 	      		
 	      	</table>
 	      </div>
-    </div>
-  </div>
+    	</div>
+  	</div>
 	</div>
 	<footer>
 		<p class="feature">功能介绍：根据定义的值比例和关键字自动筛选“什么值得买”精选频道中最近20个商品的评论，凡是符合条件的自动进行通知<span>(请开启通知权限)。</span></p>
