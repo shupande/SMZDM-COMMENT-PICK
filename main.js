@@ -2,7 +2,8 @@
 checkStatus();
 var article_picked_comments,
 			  comment_count,
-					temp_id;
+					temp_id,
+					id;
 
 
 //ajax 
@@ -24,18 +25,28 @@ function httpRequest(url, callback) {
 
 //定时获取精选数据并解析
 function checkStatus(){
-	var current=Math.round(new Date().getTime()/10);
-	console.log(current);
+	var current=Math.round(new Date().getTime()/10)+"";
+	var time_sort="";
+	var ajaxUrl="";
+	//定义空字符串用来拼接显示网页
+	var innerHtml='';
+	// console.log(time_sort);
 	//初始化
 	article_picked_comments=new Array();
 	temp_id=[];
 
-    httpRequest('https://api.smzdm.com/v1/util/editors_recommend?channel_id=18&smzdm_id=0&page=1&limit=20&time_sort=',function(data){
+	var page=[1];
+	for(n in page){
+		if(page[n]!=1){
+			time_sort=current.substring(0,5)+"000000";
+		}
+		ajaxUrl='https://api.smzdm.com/v1/util/editors_recommend?channel_id=18&smzdm_id=0&page='+page[n]+'&limit=20&time_sort='+time_sort;
+		//依次查询
+		httpRequest(ajaxUrl,function(data){
 		//解析JSON
 		data=JSON.parse(data);
 		var list=data.data.rows;
-		//定义空字符串用来拼接显示网页
-		var innerHtml='';
+
 		//如果用户没有自定义，默认显示60%值以上的商品
 		var defineWorthyValue=localStorage.defineWorthyValue || 60;
 		//详细解析json并赋值
@@ -47,10 +58,9 @@ function checkStatus(){
 			//大于用户设定值和评论数在2个以上的才进行筛选
 			if((worthy/(worthy+unworthy)*100)>defineWorthyValue && parseInt(list[i].article_comment) >2){
 				// console.log(localStorage.defineWorthyValue);
+
+				innerHtml +='<tr><td><img src="'+list[i].article_pic+'" class="main_img" alt="pic" ></td><td class="right_td" id="'+list[i].article_id+'"><h4 class="title">'+list[i].article_title+'</h4><p class="price">'+list[i].article_price+'<small class="date">'+list[i].article_date+'</small></p><p><a href="'+list[i].article_url+'" class="btn btn-success" role="button" target="_blank">查看</a></p></td><td><h1 class="worthy">'+parseInt(worthy/(worthy+unworthy)*100)+'% 值</h1></td></tr>';
 				
-				var m=i;
-				innerHtml +='<tr><td><img src="'+list[m].article_pic+'" class="main_img" alt="pic" ></td><td class="right_td" id="'+list[m].article_id+'"><h4 class="title">'+list[m].article_title+'</h4><p class="price">'+list[m].article_price+'<small class="date">'+list[m].article_date+'</small></p><p><a href="'+list[m].article_url+'" class="btn btn-success" role="button" target="_blank">查看</a></p></td><td><h1 class="worthy">'+parseInt(worthy/(worthy+unworthy)*100)+'% 值</h1></td></tr>';
-				document.getElementById("innerContent").innerHTML=innerHtml;
 
 				var url="https://api.smzdm.com/v1/comments?article_id="+list[i].article_id+"&type=haitao&limit=50&offset=0&smiles=0&atta=0&ishot=1&f=android"
 				
@@ -59,18 +69,17 @@ function checkStatus(){
 				
 				getComment(url,list[i].article_pic,list[i].article_title,list[i].article_url,list[i].article_price,list[i].article_id,list[i].article_date);
 								
+				}
 			}
-		}
-		//每10分钟刷新一遍
-        setTimeout(checkStatus, 100000);
-    });
-    //通知
+			//每10分钟刷新一遍
+	        setTimeout(checkStatus, 600000);
+	        document.getElementById("innerContent").innerHTML=innerHtml;
+	    });
+	    
+	}
+	
+    //设置通知
     setNotification();
-   //  if(chrome.notifications.onButtonClicked.hasListener(function(){})){
-   //  	console.log("存在监听=============");
-   //  	//如果存在监听器就删除
-   //  	chrome.notifications.onButtonClicked.removeListener(function(){});
-  	// }  
 }
 
 
@@ -91,9 +100,7 @@ function getComment(url,article_pic,article_title,article_url,article_price,arti
 				if(resultList[k].comment_content.indexOf(defineKeyWord[j])>0){
 				//排除快递字样
 					if(((resultList[k].comment_content.indexOf("快递")>0) || (resultList[k].comment_content.indexOf("营养快线")>0)) ==false){
-						
-					
-						console.log(resultList[k].comment_content);
+
 						article_picked_comments.push({article_id:article_id,article_pic:article_pic,article_url:article_url,article_price:article_price,article_title:article_title,comment_content:resultList[k].comment_content});
 
 					}
@@ -133,14 +140,14 @@ function setNotification(){
 	//读取评论
 	var comments=JSON.parse(localStorage.article_picked_comments);
 	var tempComments=comments;
-	var count=0,url,id;
+	var count=0,url;
 	var index=new Array();
 	var tag='';
 
 	for(var i=0;i<comments.length;i++){
 		//两个数组遍历对比并计数
 		for(var j=0; j<tempComments.length;j++){
-			if(comments[i].article_id==tempComments[j].article_id && i!=j){
+			if((comments[i].article_id==tempComments[j].article_id) && (i!=j) && (comments[i].comment_content!=tempComments[j].comment_content)){
 				count++;
 				index.push(j);
 			}
@@ -181,11 +188,7 @@ function setNotification(){
 		     	tag=id;
 		   	});
 
-		// chrome.notifications.onClicked.addListener(function(id) {
-	 //     							// window.open(article_url);
-		// 							chrome.tabs.create({url:"http://www.smzdm.com/p/"+id}, function(){});
-		// 						});
-
+		
 
 
 
@@ -200,18 +203,7 @@ function setNotification(){
 
 	}
 
-	chrome.notifications.onButtonClicked.addListener(function(id,buttonIndex){
-		if(buttonIndex==0){
-			 console.log(id);
-			 chrome.tabs.create({url:"http://www.smzdm.com/p/"+id}, function(){});
-		}else{
-			 chrome.tabs.create({url:"more.html"}, function(){});
-		}
-	});
-
-	chrome.notifications.onClosed.addListener(function (id) {
-        chrome.notifications.onButtonClicked.removeListener(function(id){});
-    });
+	
 	//点击主体
 	     
 	 //点击按钮
@@ -256,6 +248,24 @@ function setNotification(){
  //    }
 }
 
+chrome.notifications.onClicked.addListener(function(id) {
+			// window.open(article_url);
+		chrome.tabs.create({url:"http://www.smzdm.com/p/"+id}, function(){});
+	});
 
+
+chrome.notifications.onButtonClicked.addListener(function(id,buttonIndex){
+		if(buttonIndex==0){
+			 chrome.tabs.create({url:"http://www.smzdm.com/p/"+id}, function(){});
+		}else{
+			 chrome.tabs.create({url:"more.html"}, function(){});
+		}
+	});
+
+// chrome.notifications.onClosed.addListener(function (id) {
+//     chrome.notifications.onButtonClicked.removeListener(function(id){});
+// });
+
+// chrome.notifications.clear("tip_", function() {});
 //
 
