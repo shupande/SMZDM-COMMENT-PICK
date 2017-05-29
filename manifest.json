@@ -13,7 +13,7 @@
     "default_title": "值评论"
   },
   "background": {
-      "page": "more.html"
+      "page": "background.html"
    },
   "permissions": [ "http://*/*", "https://*/*", "notifications", "tabs", "contextMenus", "history", "storage"],
   "content_security_policy": "img-src *; object-src 'self'; script-src 'self'",
