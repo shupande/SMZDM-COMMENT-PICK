@@ -1,9 +1,26 @@
-
-checkStatus();
 var article_picked_comments,
 			  comment_count,
 					     id;
 
+
+
+if(localStorage.notify_switch==1){
+
+	document.getElementById("switchInput").checked=true;
+}
+if(localStorage.notify_switch==0){
+
+	document.getElementById("switchInput").checked=false;
+}
+
+//通知开关控制
+document.getElementById("switchInput").onclick = function() {
+	if(document.getElementById("switchInput").checked){
+		localStorage.notify_switch=1;
+	}else{
+		localStorage.notify_switch=0;
+	}
+}
 
 //ajax 
 function httpRequest(url, callback) { 
@@ -57,13 +74,11 @@ function checkStatus(){
 			if((worthy/(worthy+unworthy)*100)>defineWorthyValue && parseInt(list[i].article_comment) >2){
 				// console.log(localStorage.defineWorthyValue);
 
-				innerHtml +='<tr class="list"><td><img src="'+list[i].article_pic+'" class="main_img" alt="pic" ></td><td class="right_td" id="'+list[i].article_id+'"><h4 class="title">'+list[i].article_title+'</h4><p class="price">'+list[i].article_price+'<small class="date">'+list[i].article_date+'</small></p><p><a href="'+list[i].article_url+'" class="btn btn-success" role="button" target="_blank">查看</a></p></td><td><h1 class="worthy">'+parseInt(worthy/(worthy+unworthy)*100)+'% 值</h1></td></tr>';
+				innerHtml +='<a class="list-group-item" href="'+list[i].article_url+'" target="_blank"><div><img src="'+list[i].article_pic+'" class="main_img" alt="pic" ></div><div class="right_td" id="'+list[i].article_id+'"><h4 class="title">'+list[i].article_title+'</h4><p class="price">'+list[i].article_price+'<small class="date">'+list[i].article_date+'</small></p></div><div class="worthy"><h1>'+parseInt(worthy/(worthy+unworthy)*100)+'% 值</h1></div></a>';
 				
 
 				var url="https://api.smzdm.com/v1/comments?article_id="+list[i].article_id+"&type=haitao&limit=50&offset=0&smiles=0&atta=0&ishot=1&f=android"
 				
-				// console.log(list[i].article_title+"====数组编号："+i);
-				// console.log(list[m].article_url);
 				
 				getComment(url,list[i].article_pic,list[i].article_title,list[i].article_url,list[i].article_price,list[i].article_id,list[i].article_date);
 								
@@ -77,7 +92,9 @@ function checkStatus(){
 	// }
 	
     //设置通知
-    setNotification();
+    if(localStorage.notify_switch==1){
+    	setNotification();
+    } 
 }
 
 
@@ -86,8 +103,13 @@ function getComment(url,article_pic,article_title,article_url,article_price,arti
 	httpRequest(url,function(result){
 		result=JSON.parse(result);
 		var resultList=result.data.rows;
+		var defineKeyWord;
 		//筛选关键字
-		var defineKeyWord=JSON.parse(localStorage.keyword) || "{快}";
+		if(localStorage.keyword==null){
+			defineKeyWord="快"; //默认
+		}else{
+			defineKeyWord=JSON.parse(localStorage.keyword);
+		}
 
 		//筛选评论
 		for(var k in resultList){
@@ -105,11 +127,6 @@ function getComment(url,article_pic,article_title,article_url,article_price,arti
 
 				}
 
-				//
-				
-
-				//多条评论组合
-	
 			}
 		}
 
@@ -120,15 +137,12 @@ function getComment(url,article_pic,article_title,article_url,article_price,arti
 
 }
 
-//article_pic,article_title,article_url,comment_content,article_price,article_id
+
 
 //浏览器通知
 function setNotification(){
 
 	//查询设置通知权限
-		// Notification.requestPermission().then(function(permission) { 
-
-		 // });
 	Notification.requestPermission(function(status){  //status值有三种：default/granted/denied
 	  if(Notification.permission !== status){
 	    Notification.permission = status;
@@ -140,7 +154,6 @@ function setNotification(){
 	var tempComments=comments;
 	var count=0,url;
 	var index=new Array();
-	var tag='';
 
 	for(var i=0;i<comments.length;i++){
 		//两个数组遍历对比并计数
@@ -182,74 +195,18 @@ function setNotification(){
 		id=comments[i].article_id;
 		url=comments[i].article_url;
 
-		chrome.notifications.create(id,opt,function (id) {
-		     	tag=id;
-		   	});
+		chrome.notifications.create(id,opt,function () {});
 
-		
-
-
-
-		//
-		// setInterval(function(){
-		// 		chrome.notifications.create(id,opt,function () {
-		//      	// console.log(article_id);
-		//    	});
-		// },10000);
-
-		
 
 	}
 
-	
-	//点击主体
-	     
-	 //点击按钮
-	
-
-	// //通知的各项参数
-	// var options={
-	//             type: "list",
-	//             title: "test",
-	//             iconUrl: "/icon.png",
-	//             items: items,
-	//             // body: article_title+"\n价格："+article_price+"\n\n"+"评价内容："+comment_content,
-	//             buttons:[{
-	//             	title:"去看看",
-	//             	iconUrl: chrome.runtime.getURL("icon.png"),
-	//             }]
-	//         };
-	//  //rich notifications
-	//  var Id = article_id;
-	//  try{
-	//  	chrome.notifications.create(Id, options, function(){});
-	//  }catch(e){
-
-	//  }
-	 
-	//显示通知，及点击通知后跳转设置
-	// if(Notification && Notification.permission === "granted"){
- //        var n = new Notification("新发现符合要求的商品！", options,function() {});    
- //        n.onshow = function(){
- //            console.log("You got me!");
- //        };
- //        n.onclick = function() {
- //            console.log("You clicked me!");
- //            window.open(article_url);
- //        };
- //        n.onclose = function(){
- //            console.log("notification closed!");
- //        };        
- //        n.onerror = function() {
- //            console.log("An error accured");
- //        }            
- //    }
 }
 
+checkStatus();
+
 chrome.notifications.onClicked.addListener(function(id) {
-			// window.open(article_url);
 		chrome.tabs.create({url:"http://www.smzdm.com/p/"+id}, function(){});
-	});
+});
 
 
 chrome.notifications.onButtonClicked.addListener(function(id,buttonIndex){
@@ -258,12 +215,5 @@ chrome.notifications.onButtonClicked.addListener(function(id,buttonIndex){
 		}else{
 			 chrome.tabs.create({url:"more.html"}, function(){});
 		}
-	});
-
-// chrome.notifications.onClosed.addListener(function (id) {
-//     chrome.notifications.onButtonClicked.removeListener(function(id){});
-// });
-
-// chrome.notifications.clear("tip_", function() {});
-//
+});
 

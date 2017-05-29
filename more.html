@@ -1,89 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-	<meta charset="UTF-8">
-	<title>值评论-设置和展示页</title>
-	<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <title>值评论-设置和展示页</title>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
     <style>
-    	*{
-    		margin:0px;
-    		padding: 0px;
-    		font-family: "微软雅黑";
-    	}
-		.navbar{
-			margin-bottom: 0px;
-		}
-		.container a{
-			font-weight: bold;
-			color: #FF3900;
-			font-size: 20px;
-		}
-		img{
-			height: 140px;
-			width: 140px;
-		}
-		small{
-			margin-left: 15px;
-			color: #E14C0B;
-		}
-		td.right_td{
-			padding: 30px;
-		}
-		footer{
-			text-align: center;
-		}
-		.bg{
-			background-color: #e6e6e6;
-		}
-		.worthy{
-			color: #FF3900;
-			font-weight: bold;
-		}
-		.logo{
-			width: 48px;
-			height: 48px;
-		}
-		.feature{
-			font-size: 12px;
-			color: #7A7A7A;
-		}
-		.feature span{
-			margin-left: 3px;
-			font-weight: bold;
-		}
-		.thumbnail{
-			margin: 20px;
-		}
-		.list{
-			margin-top:10px; 
-		}
-		footer{
-			margin-top: 20px;
-		}
+    * {
+        margin: 0px;
+        padding: 0px;
+        font-family: "微软雅黑";
+    }
+    
+    .navbar {
+        margin-bottom: 0px;
+    }
+    
+    .container a {
+        font-weight: bold;
+        color: #FF3900;
+        font-size: 20px;
+    }
+    img {
+        height: 140px;
+        width: 140px;
+    }
+    
+    small {
+        margin-left: 15px;
+        color: #E14C0B;
+    }
+    
+    footer {
+        text-align: center;
+    }
+    
+    .bg {
+        background-color: #e6e6e6;
+    }
+    
+    .worthy h1 {
+        color: #FF3900;
+        font-weight: bold;
+    }
+    
+    .logo {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .feature {
+        font-size: 12px;
+        color: #7A7A7A;
+    }
+    
+    .feature span {
+        margin-left: 3px;
+        font-weight: bold;
+    }
+    
+    .caption {
+        padding: 2rem 4rem 2rem 4rem;;
+    }
+    
+    .list-group-item {
+        margin-top: 10px;
+        border-radius: 10px;
+        padding: 2rem 4rem 2rem 4rem;
+        display: flex;
+    }
+    .right_td,
+    .worthy {
+        margin-left: 4rem;
+    }
+    footer {
+        margin-top: 2rem;
+    }
+    .notify_switch{
+    	text-align: right;
+
+    }
+    .mui-switch {
+        width: 52px;
+        height: 31px;
+        position: relative;
+        border: 1px solid #dfdfdf;
+        background-color: #fdfdfd;
+        box-shadow: #dfdfdf 0 0 0 0 inset;
+        border-radius: 20px;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        background-clip: content-box;
+        display: inline-block;
+        -webkit-appearance: none;
+        user-select: none;
+        outline: none !important;
+        cursor: pointer;
+    }
+    
+    .mui-switch:before {
+        content: '';
+        width: 29px;
+        height: 29px;
+        position: absolute;
+        top: 0px;
+        left: 0;
+        border-radius: 20px;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        background-color: #fff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    }
+    
+    .mui-switch:checked {
+        border-color: #64bd63;
+        box-shadow: #64bd63 0 0 0 16px inset;
+        background-color: #64bd63;
+    }
+    
+    .mui-switch:checked:before {
+        left: 21px;
+    }
+    
+    .mui-switch.mui-switch-animbg {
+        transition: background-color ease 0.4s;
+    }
+    
+    .mui-switch.mui-switch-animbg:before {
+        transition: left 0.3s;
+    }
+    
+    .mui-switch.mui-switch-animbg:checked {
+        box-shadow: #dfdfdf 0 0 0 0 inset;
+        background-color: #64bd63;
+        transition: border-color 0.4s, background-color ease 0.4s;
+    }
+    
+    .mui-switch.mui-switch-animbg:checked:before {
+        transition: left 0.3s;
+    }
+    
+    .mui-switch.mui-switch-anim {
+        transition: border cubic-bezier(0, 0, 0, 1) 0.4s, box-shadow cubic-bezier(0, 0, 0, 1) 0.4s;
+    }
+    
+    .mui-switch.mui-switch-anim:before {
+        transition: left 0.3s;
+    }
+    
+    .mui-switch.mui-switch-anim:checked {
+        box-shadow: #64bd63 0 0 0 16px inset;
+        background-color: #64bd63;
+        transition: border ease 0.4s, box-shadow ease 0.4s, background-color ease 1.2s;
+    }
+    
+    .mui-switch.mui-switch-anim:checked:before {
+        transition: left 0.3s;
+    }
     </style>
 </head>
+
 <body>
-	<nav class="navbar navbar-default navbar-static-top">
-	  <div class="container">
-	  	<img src="icon48.png" alt="" class="logo">
-	    <a href="https://weibo.com/unimz" target="_blank">值评论</a>
-	  </div>
-	</nav>
-	<div class="row" id="main_content">
-	  <div class="col-sm-12 col-md-12 bg ">
-	    <div class="thumbnail">
-	      <div class="caption" >
-	      	<table id="innerContent">
-	      		
-	      	</table>
-	      </div>
-    	</div>
-  	</div>
-	</div>
-	<footer>
-		<p class="feature">功能介绍：根据定义的值比例和关键字自动筛选“什么值得买”精选频道中最近20个商品的评论，凡是符合条件的自动进行通知<span>(请开启通知权限)。</span></p>
-		<p>疑问交流：<a href="https://weibo.com/unimz">@舒盼unimz</a></p>
-	</footer>
-	<script src="main.js"></script> 
+    <nav class="navbar navbar-default navbar-static-top">
+        <div class="container">
+            <img src="icon48.png" alt="" class="logo">
+            <a href="https://weibo.com/unimz" target="_blank">值评论</a>
+        </div>
+    </nav>
+    <div class="row" id="main_content">
+        <div class="col-sm-12 col-md-12 bg ">
+            <div class="caption">
+	            <div class="notify_switch">
+		            <label>
+		            	<input class="mui-switch mui-switch-animbg mui-switch-anim" id="switchInput" type="checkbox">
+		            </label>
+		            <p>开启本开关会自动定时弹出通知</p>
+	            </div>
+                <div class="list-group" id="innerContent">
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p class="feature">功能介绍：根据定义的值比例和关键字自动筛选“什么值得买”精选频道中最近20个商品的评论，凡是符合条件的自动进行通知<span>(请开启通知权限)。</span></p>
+        <p>疑问交流：<a href="https://weibo.com/unimz">@舒盼unimz</a></p>
+    </footer>
+    <script src="main.js"></script>
 </body>
+
 </html>
