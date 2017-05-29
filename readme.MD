@@ -10,7 +10,9 @@
 
 2、开启通知开关
 
-![开启通知](https://github.com/shupande/SMZDM-COMMENT-PICK/raw/16ae5286a0bb10d7ea479cca5b662d614afb7431/Publish/more.png)
+![开启通知](https://raw.githubusercontent.com/shupande/SMZDM-COMMENT-PICK/master/Publish/more.png)
+
+
 
 
 
