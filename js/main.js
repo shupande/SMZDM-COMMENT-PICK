@@ -80,7 +80,7 @@ function checkStatus(){
 								
 				}
 			}
-			//每10分钟刷新一遍
+			//每10分钟获取一遍
 	        setTimeout(checkStatus, 600000);
 	        document.getElementById("innerContent").innerHTML=innerHtml;
 	    });

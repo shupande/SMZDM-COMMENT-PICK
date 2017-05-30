@@ -1,8 +1,7 @@
 var id;
 
 if (localStorage.notify_switch == 1) {
-    console.log("work");
-    setInterval(setNotification(), 100000);
+    setInterval(setNotification,1800000);//30分钟通知一次
 }
 
 //浏览器通知
