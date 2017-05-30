@@ -17,8 +17,7 @@ function setNotification() {
     //读取评论
     var comments = JSON.parse(localStorage.article_picked_comments);
     var tempComments = comments;
-    var count = 0,
-        url;
+    var count = 0;
     var index = new Array();
 
     for (var i = 0; i < comments.length; i++) {
@@ -59,7 +58,6 @@ function setNotification() {
         index = [];
         count = 0;
         id = comments[i].article_id;
-        url = comments[i].article_url;
 
         chrome.notifications.create(id, opt, function() {});
 
