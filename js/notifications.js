@@ -1,9 +1,13 @@
 var id;
 
-if (localStorage.notify_switch == 1) {
-    setInterval(setNotification,1800000);//30分钟通知一次
+try{
+	if (localStorage.notify_switch == 1) {
+		// setNotification();
+	    setInterval(setNotification,1800000);//30分钟通知一次
+	}
+}catch(err){
+	console.log(err);
 }
-
 //浏览器通知
 function setNotification() {
 
@@ -44,7 +48,7 @@ function setNotification() {
             title: comments[i].article_title,
             message: comments[i].comment_content,
             iconUrl: comments[i].article_pic,
-            // requireInteraction: true, //通知保持常驻，用户点击才消失
+            requireInteraction: true, //通知保持常驻，用户点击才消失
             buttons: [{
                 title: "(づ｡◕‿‿◕｡)づ报告！找到一个符合您的要求>>>",
                 iconUrl: chrome.runtime.getURL("go.png"),
@@ -58,6 +62,7 @@ function setNotification() {
         index = [];
         count = 0;
         id = comments[i].article_id;
+
 
         chrome.notifications.create(id, opt, function() {});
 

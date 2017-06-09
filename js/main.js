@@ -1,23 +1,24 @@
 var article_picked_comments;
 
-if(localStorage.notify_switch==1){
-
-	document.getElementById("switchInput").checked=true;
-}
-if(localStorage.notify_switch==0){
-
-	document.getElementById("switchInput").checked=false;
-}
-
-//通知开关控制
-document.getElementById("switchInput").onclick = function() {
-	if(document.getElementById("switchInput").checked){
-		localStorage.notify_switch=1;
-	}else{
-		localStorage.notify_switch=0;
+try{
+	if(localStorage.notify_switch==1){
+		document.getElementById("switchInput").checked=true;
 	}
-}
+	if(localStorage.notify_switch==0){
 
+		document.getElementById("switchInput").checked=false;
+	}
+	//通知开关控制
+	document.getElementById("switchInput").onclick = function() {
+		if(document.getElementById("switchInput").checked){
+			localStorage.notify_switch=1;
+		}else{
+			localStorage.notify_switch=0;
+		}
+	}
+}catch(err){
+	console.log(err);
+}
 //ajax 
 function httpRequest(url, callback) { 
 	var xhr = new XMLHttpRequest();
@@ -82,7 +83,11 @@ function checkStatus(){
 			}
 			//每10分钟获取一遍
 	        setTimeout(checkStatus, 600000);
-	        document.getElementById("innerContent").innerHTML=innerHtml;
+	        try{
+	        	document.getElementById("innerContent").innerHTML=innerHtml;
+	        }catch(err){
+	        	console.log(err);
+	        }
 	    });
 
 }
@@ -94,37 +99,49 @@ function getComment(url,article_pic,article_title,article_url,article_price,arti
 		result=JSON.parse(result);
 		var resultList=result.data.rows;
 		var defineKeyWord;
-		//筛选关键字
-		if(localStorage.keyword==null){
-			defineKeyWord="快"; //默认
-		}else{
-			defineKeyWord=JSON.parse(localStorage.keyword);
-		}
+		var title;
 
-		//筛选评论
-		for(var k in resultList){
-			// console.log(resultList[k].comment_content);
-
-			for(var j in defineKeyWord ){
-				//评论关键字筛选
-				if(resultList[k].comment_content.indexOf(defineKeyWord[j])>0){
-				//排除快递字样
-					if(((resultList[k].comment_content.indexOf("快递")>0) || (resultList[k].comment_content.indexOf("营养快线")>0)) ==false){
-
+		//如果设置了商品标题跟踪
+		if(localStorage.title!=null){
+			title=JSON.parse(localStorage.title);
+			for(var n in title){
+				if(article_title.indexOf(title[n])>0){
+					//筛选关键字
+					if(localStorage.keyword==null){
 						article_picked_comments.push({article_id:article_id,article_pic:article_pic,article_url:article_url,article_price:article_price,article_title:article_title,comment_content:resultList[k].comment_content});
-
+					}else{
+						defineKeyWord=JSON.parse(localStorage.keyword);
 					}
 
-				}
 
+					//筛选评论
+					for(var k in resultList){
+						// console.log(resultList[k].comment_content);
+
+						for(var j in defineKeyWord ){
+							//评论关键字筛选
+							if(resultList[k].comment_content.indexOf(defineKeyWord[j])>0){
+							//排除快递字样
+								if(((resultList[k].comment_content.indexOf("快递")>0) || (resultList[k].comment_content.indexOf("营养快线")>0)) ==false){
+
+									article_picked_comments.push({article_id:article_id,article_pic:article_pic,article_url:article_url,article_price:article_price,article_title:article_title,comment_content:resultList[k].comment_content});
+
+								}
+
+							}
+
+						}
+					}
+				}
 			}
 		}
-
+		
 		localStorage.article_picked_comments=JSON.stringify(article_picked_comments);
 		
 	});	
 
 }
+
 
 checkStatus();
 

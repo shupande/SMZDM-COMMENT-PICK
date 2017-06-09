@@ -1,5 +1,45 @@
 var	keyWordInputResult=new Array();
+var titleResult=new Array();
 
+//显示设置的参数
+try{
+	var tempTitle=JSON.parse(localStorage.title);
+	var str="";
+	var i;
+	for(i=0;i<tempTitle.length;i++){
+		if(i==tempTitle.length-1){
+			str += tempTitle[i];
+		}else{
+			str += tempTitle[i]+";";
+		}
+	}
+	document.getElementById("titleInput").value=str;
+	document.getElementById("worthyValueInput").value=localStorage.defineWorthyValue;
+}catch(e){
+	console.log(e);
+}
+
+
+// getTitle
+document.getElementById("setTitle").onclick = function() {
+	var tempTitle=document.getElementById("titleInput").value;
+	if(tempTitle=="" || tempTitle==null || tempTitle==undefined || tempTitle==" "){
+		err();
+		return;
+	}
+	//数组
+	if(tempTitle.indexOf(";")>0){
+		titleResult=tempTitle.split(";");
+	}else if(tempTitle.indexOf("；")>0){ //防止输入中文分号
+		err();
+		return;
+	}else{
+		titleResult=tempTitle;
+	}
+
+	localStorage.title=JSON.stringify(titleResult);
+	success();
+}
 
 // getworthyvalue
 document.getElementById("setworthyValue").onclick = function() {

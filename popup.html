@@ -87,12 +87,19 @@
         <div class="input-group">
             <label for="form-group">下方输入需要实时监控的商品和评论关键字，默认为包含“快”的评论。</label>
             <div><span id="tips"></span></div>
+             <div>
+                <span>商品名:</span>
+                <input type="text" class="form-control" id="titleInput" placeholder="如：口红、多个请用分号“;”隔开">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" id="setTitle" type="button">设置</button>
+                </span>
+            </div>
             <div>
                 <span>值比例:</span>
                 <input type="number" class="form-control" id="worthyValueInput" placeholder="输入整数：如：75、80">
                 <span class="input-group-btn">
-	        <button class="btn btn-default" id="setworthyValue" type="button">设置</button>
-	      </span>
+	               <button class="btn btn-default" id="setworthyValue" type="button">设置</button>
+	           </span>
             </div>
             <div>
                 <span>关键字:</span>
