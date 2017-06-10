@@ -108,7 +108,7 @@ function getComment(url,article_pic,article_title,article_url,article_price,arti
 				if(article_title.indexOf(title[n])>0){
 					//筛选关键字
 					if(localStorage.keyword==null){
-						article_picked_comments.push({article_id:article_id,article_pic:article_pic,article_url:article_url,article_price:article_price,article_title:article_title,comment_content:resultList[k].comment_content});
+						article_picked_comments.push({article_id:article_id,article_pic:article_pic,article_url:article_url,article_price:article_price,article_title:article_title});
 					}else{
 						defineKeyWord=JSON.parse(localStorage.keyword);
 					}
