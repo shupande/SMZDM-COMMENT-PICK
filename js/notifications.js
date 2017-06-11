@@ -12,7 +12,7 @@ setInterval(function(){
 	}catch(err){
 		console.log(err);
 	}
-},10000); //30分钟通知一次
+},100000); //30分钟通知一次
 
 //浏览器通知
 function setNotification() {
@@ -61,7 +61,7 @@ function setNotification() {
 	            iconUrl: comments[i].article_pic,
 	            requireInteraction: true, //通知保持常驻，用户点击才消失
 	            buttons: [{
-	                title: "(づ｡◕‿‿◕｡)づ报告！找到一个符合您的要求>>>",
+	                title: "(づ｡◕‿‿◕｡)づ报告！找到一个符合您的评论商品>>>",
 	                iconUrl: chrome.runtime.getURL("go.png"),
 	            }, {
 	                title: "点这里查看全部-值评论！",
@@ -95,7 +95,7 @@ function setNotification() {
 	            iconUrl: comments[i].article_pic,
 	            requireInteraction: true, //通知保持常驻，用户点击才消失
 	            buttons: [{
-	                title: "(づ｡◕‿‿◕｡)づ报告！找到一个符合您的商品>>>",
+	                title: "(づ｡◕‿‿◕｡)づ报告！找到一个符合要求的商品>>>",
 	                iconUrl: chrome.runtime.getURL("go.png"),
 	            }, {
 	                title: "点这里查看全部-值评论！",
