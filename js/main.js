@@ -52,12 +52,12 @@ function checkStatus(){
 	// 	if(page[n]!=1){
 	// 		time_sort=current.substring(0,5)+"000000";
 	// 	}
-		ajaxUrl='https://api.smzdm.com/v1/util/editors_recommend?channel_id=18&smzdm_id=0&page='+1+'&limit=20&time_sort='+time_sort;
+		// ajaxUrl='https://api.smzdm.com/v1/util/editors_recommend?channel_id=18&smzdm_id=0&page='+1+'&limit=20&time_sort='+time_sort;
+		ajaxUrl='http://www.smzdm.com/json_more';
 		//依次查询
 		httpRequest(ajaxUrl,function(data){
 		//解析JSON
-		data=JSON.parse(data);
-		var list=data.data.rows;
+		var list=JSON.parse(data);
 
 		//如果用户没有自定义，默认显示60%值以上的商品
 		var defineWorthyValue=localStorage.defineWorthyValue || 60;
