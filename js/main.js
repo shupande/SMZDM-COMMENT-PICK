@@ -97,6 +97,7 @@ function getComment(url,article_pic,article_title,article_url,article_price,arti
 	//请求所有评论内容 没有阻塞		
 	httpRequest(url,function(result){
 		result=JSON.parse(result);
+
 		var resultList=result.data.rows;
 		var defineKeyWord;
 		var title;
